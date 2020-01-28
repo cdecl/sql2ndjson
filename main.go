@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 
+	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -28,12 +29,15 @@ func GetDataSet(rows *sql.Rows) DataSet {
 
 		for i, m := range cols {
 			v := coldata[i].(*interface{})
-			if *v == nil {
+
+			switch (*v).(type) {
+			case nil:
 				colmap[m] = ""
-			} else {
-				colmap[m] = string((*v).([]byte))
+			case int64:
+				colmap[m] = fmt.Sprintf("%v", *v)
+			default:
+				colmap[m] = fmt.Sprintf("%s", *v)
 			}
-			// colmap[m] = fmt.Sprintf("%s", *v)
 		}
 		dataset = append(dataset, colmap)
 	}
