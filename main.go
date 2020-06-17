@@ -10,7 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type DataSet = []map[string]string
+type DataSet = []map[string]interface{}
 
 func GetDataSet(rows *sql.Rows) DataSet {
 	cols, _ := rows.Columns()
@@ -18,7 +18,7 @@ func GetDataSet(rows *sql.Rows) DataSet {
 	dataset := DataSet{}
 
 	for rows.Next() {
-		colmap := make(map[string]string)
+		colmap := make(map[string]interface{})
 		// colmap := make(map[string]string)
 		coldata := make([]interface{}, colsize)
 
@@ -36,7 +36,14 @@ func GetDataSet(rows *sql.Rows) DataSet {
 			case int64:
 				colmap[m] = fmt.Sprintf("%v", *v)
 			default:
-				colmap[m] = fmt.Sprintf("%s", *v)
+				vstr := fmt.Sprintf("%s", *v)
+				dic := make(map[string]interface{})
+
+				if json.Unmarshal([]byte(vstr), &dic) != nil {
+					colmap[m] = fmt.Sprintf("%s", *v)
+				} else {
+					colmap[m] = dic
+				}
 			}
 		}
 		dataset = append(dataset, colmap)
