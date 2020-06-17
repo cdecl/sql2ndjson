@@ -16,5 +16,5 @@ dep:
 	go mod tidy
 	
 cc:
-	SET GOOS=linux& SET GOARCH=amd64& go build -o $(BIN)/$(EXEC) 
-	SET GOOS=windows& SET GOARCH=amd64& go build -o $(BIN)/$(EXEC).exe
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o $(BIN)/$(EXEC) 
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(BIN)/$(EXEC).exe

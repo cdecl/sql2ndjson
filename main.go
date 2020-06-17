@@ -64,6 +64,7 @@ func getArgs() (flags, bool) {
 	args.Driver = flag.String("d", "", "driver name  (e.g mysql)")
 	args.Source = flag.String("s", "", "source (e.g user:passwd@tcp(host:3306)/database )")
 	args.Query = flag.String("q", "", "query ")
+	flag.Bool("", false, "ver. 200617.0")
 	flag.Parse()
 
 	isFlagPassed := func(name string) bool {
